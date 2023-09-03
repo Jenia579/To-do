@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef, useState } from "react";
 export default class Task extends React.Component {
   constructor(props) {
     super(props);
@@ -58,3 +58,45 @@ export default class Task extends React.Component {
     }
   }
 }
+export const TaskFunc = ({ children, removeTask, updateTask, index }) => {
+  // hooks
+  const [isEditState, setisEditState] = useState({ isEdit: false });
+  const newTxt = useRef();
+  const handleClickEdit = () => {
+    setisEditState({ isEdit: true });
+  };
+
+  const handleClickRemove = () => {
+    removeTask(index);
+  };
+
+  const handleClickSave = () => {
+    const value = newTxt.current.value;
+    updateTask(index, value);
+    setisEditState({ isEdit: false });
+  };
+  // const {isEdit} = state
+
+  if (!isEditState.isEdit) {
+    return (
+      <div className="box">
+        <div>{children}</div>
+        <button onClick={handleClickEdit} className="btn light">
+          Edit
+        </button>
+        <button onClick={handleClickRemove} className="btn red">
+          Remove
+        </button>
+      </div>
+    );
+  } else {
+    return (
+      <div className="box">
+        <textarea ref={newTxt} defaultValue={children}></textarea>
+        <button onClick={handleClickSave} className="btn success">
+          Save
+        </button>
+      </div>
+    );
+  }
+};
